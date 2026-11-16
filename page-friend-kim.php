@@ -2,7 +2,7 @@
 /**
  * Template Name: Friend Profile - Kim
  * Template Post Type: page
- * Ultra 3D Aesthetic Edition
+ * Ultra 3D Aesthetic Edition v2 — unified with front-page.php
  */
 get_header(); 
 
@@ -11,16 +11,17 @@ $first_name = explode(' ', $member_name)[0];
 ?>
 
 <style>
-/* ===== INDIVIDUAL PORTFOLIO — Ultra 3D Edition ===== */
+/* ===== INDIVIDUAL PORTFOLIO — Ultra 3D Edition v2 ===== */
 .portfolio-page {
-  --ivory:#F7F4EC; --paper:#FBFAF5;
-  --ink:#14120E; --ink-3:#4A443A;
+  --ivory:#F7F4EC; --ivory-2:#EFEADD; --paper:#FBFAF5;
+  --ink:#14120E; --ink-2:#2E2A22; --ink-3:#4A443A;
   --gold:#A8874E; --gold-2:#C4A566; --gold-3:#D4BC8B;
   --line:rgba(168,135,78,.16); --line-2:rgba(168,135,78,.08);
   --muted:#7A7266; --muted-2:#9A9284;
   --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif;
   --ease:cubic-bezier(.22,.8,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
-  --gutter:clamp(24px,6vw,96px);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --gutter:clamp(28px,7vw,112px);
   --section-y:clamp(80px,10vw,140px);
 
   --shadow-1:
@@ -35,11 +36,19 @@ $first_name = explode(' ', $member_name)[0];
     0 4px 8px rgba(20,18,14,.06),
     0 16px 40px -10px rgba(20,18,14,.18),
     0 40px 80px -40px rgba(20,18,14,.24);
+  --shadow-gold:
+    0 1px 0 rgba(255,255,255,.35) inset,
+    0 -1px 0 rgba(0,0,0,.2) inset,
+    0 8px 20px -4px rgba(168,135,78,.4),
+    0 16px 40px -10px rgba(168,135,78,.35);
 
   background: var(--ivory); color: var(--ink); font-family: var(--sans);
   min-height: 100vh; position: relative; overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
+
+.portfolio-page *,.portfolio-page *::before,.portfolio-page *::after{box-sizing:border-box}
+.portfolio-page a{color:inherit;text-decoration:none}
 
 /* Custom Scrollbar */
 .portfolio-page ::-webkit-scrollbar { width: 8px; }
@@ -57,6 +66,12 @@ $first_name = explode(' ', $member_name)[0];
 
 .portfolio-page .container { max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); position: relative; z-index: 2; }
 
+/* Perspective for 3D */
+.portfolio-page .container,
+.pf-hero .grid,
+.skill-cards,
+.hobbies-grid { perspective: 1400px; }
+
 /* Reading Progress */
 .read-progress {
   position: fixed; top: 0; left: 0; height: 3px; width: 0%;
@@ -67,52 +82,138 @@ $first_name = explode(' ', $member_name)[0];
 
 /* Cursor Glow */
 .cursor-glow {
-  position: fixed; width: 400px; height: 400px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(168,135,78,0.10), transparent 70%);
+  position: fixed; width: 420px; height: 420px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(168,135,78,0.12), transparent 70%);
   pointer-events: none; z-index: 1; transform: translate(-50%, -50%);
+  will-change: transform;
 }
 @media (max-width: 768px) { .cursor-glow { display: none; } }
-
-/* Floating Background Elements */
-.floating-bg {
-  position: absolute; font-family: var(--serif); color: var(--gold); 
-  opacity: 0.04; pointer-events: none; z-index: 0;
-  animation: floatSlow 15s infinite ease-in-out;
-  user-select: none; font-style: italic; font-size: 10rem;
-}
-.fb-1 { top: 10%; left: 5%; animation-delay: 0s; }
-.fb-2 { top: 40%; right: 8%; animation-delay: 3s; font-size: 15rem; }
-.fb-3 { bottom: 20%; left: 10%; animation-delay: 6s; }
-@keyframes floatSlow {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-30px) rotate(10deg); }
-}
 
 /* ===== HERO ===== */
 .pf-hero {
   padding: clamp(180px, 20vw, 260px) 0 clamp(80px, 10vw, 140px);
-  position: relative;
+  position: relative; overflow: hidden;
+}
+.pf-hero .container {
+  translate: 0 calc(var(--sy,0) * .1px);
+  opacity: calc(1 - var(--sy,0) * .0006);
 }
 
-/* Floating cube accent */
-.pf-cube {
-  position: absolute; right: 10%; top: 30%; width: 80px; height: 80px;
-  transform-style: preserve-3d; animation: cubeSpin 20s infinite linear;
-  pointer-events: none; z-index: 1; opacity: .55;
+/* Floating orbs */
+.pf-orb {
+  position: absolute; border-radius: 50%; pointer-events: none; z-index: 1;
+  background: radial-gradient(circle at 35% 30%,rgba(255,255,255,.45),rgba(196,165,102,.35) 40%,transparent 72%);
+  filter: blur(2px);
+  animation: floatOrb 22s infinite ease-in-out;
+  translate:
+    calc(var(--px,0) * var(--depth,30) * 1px)
+    calc(var(--py,0) * var(--depth,30) * 1px + var(--sy,0) * var(--sdepth,-.08) * 1px);
+  will-change: transform, translate;
 }
-.pf-cube span {
-  position: absolute; inset: 0; border: 1px solid rgba(168,135,78,.35);
-  background: linear-gradient(135deg, rgba(196,165,102,.18), transparent);
-  border-radius: 8px;
+.pf-orb.o1{width:260px;height:260px;top:15%;right:12%;--depth:-46;--sdepth:-.14}
+.pf-orb.o2{width:140px;height:140px;bottom:28%;right:32%;--depth:64;--sdepth:-.06;animation-delay:6s}
+.pf-orb.o3{width:180px;height:180px;top:48%;left:4%;--depth:-28;--sdepth:-.1;animation-delay:12s}
+@keyframes floatOrb {
+  0%,100%{transform:translate(0,0) scale(1);opacity:.35}
+  50%{transform:translate(30px,-40px) scale(1.15);opacity:.65}
 }
-.pf-cube span:nth-child(1){transform:translateZ(40px)}
-.pf-cube span:nth-child(2){transform:rotateY(90deg) translateZ(40px)}
-.pf-cube span:nth-child(3){transform:rotateX(90deg) translateZ(40px)}
-.pf-cube span:nth-child(4){transform:rotateY(180deg) translateZ(40px)}
-.pf-cube span:nth-child(5){transform:rotateY(-90deg) translateZ(40px)}
-.pf-cube span:nth-child(6){transform:rotateX(-90deg) translateZ(40px)}
-@keyframes cubeSpin { 0%{transform:rotateX(20deg) rotateY(0)} 100%{transform:rotateX(20deg) rotateY(360deg)} }
-@media (max-width: 900px) { .pf-cube { display: none; } }
+
+/* ----- 3D hero scene (EXACT MATCH with front-page.php) ----- */
+.pf-stage {
+  position: absolute; right: clamp(2%,6vw,9%); top: 24%;
+  width: 420px; height: 420px; z-index: 1;
+  perspective: 1100px; pointer-events: none;
+  translate: 0 calc(var(--sy,0) * -.12px);
+  opacity: 0; animation: stageIn 1.6s var(--ease-out) .6s forwards;
+}
+@keyframes stageIn { from{opacity:0;scale:.82} to{opacity:1;scale:1} }
+.pf-scene {
+  position: absolute; inset: 0; transform-style: preserve-3d;
+  transform:
+    rotateX(calc(var(--py,0) * -20deg + 16deg))
+    rotateY(calc(var(--px,0) * 28deg - 8deg));
+}
+.pf-scene > * { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; }
+
+.hs-core {
+  width: 110px; height: 110px; margin: -55px 0 0 -55px; border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff8e8 0%, #e8d4a8 22%, #c4a566 55%, #8f6f3a 85%, #6b5028 100%);
+  box-shadow:
+    inset -10px -14px 24px rgba(90,65,25,.55),
+    inset 10px 12px 20px rgba(255,255,255,.7),
+    0 20px 40px -8px rgba(168,135,78,.45);
+  animation: coreBob 7s ease-in-out infinite;
+  transform: translateZ(20px);
+}
+@keyframes coreBob {
+  0%,100%{transform:translateZ(20px) translateY(0)}
+  50%{transform:translateZ(50px) translateY(-8px)}
+}
+
+.cube3d {
+  --s: 170px; width: var(--s); height: var(--s);
+  margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  transform-style: preserve-3d;
+}
+.cube3d span {
+  position: absolute; inset: 0; border-radius: 10px;
+  border: 1px solid rgba(168,135,78,.45);
+  background: linear-gradient(135deg,rgba(255,255,255,.55),rgba(196,165,102,.12));
+  box-shadow: inset 0 0 30px rgba(196,165,102,.18);
+}
+.cube3d span:nth-child(1){transform:translateZ(calc(var(--s) / 2))}
+.cube3d span:nth-child(2){transform:rotateY(90deg) translateZ(calc(var(--s) / 2))}
+.cube3d span:nth-child(3){transform:rotateX(90deg) translateZ(calc(var(--s) / 2))}
+.cube3d span:nth-child(4){transform:rotateY(180deg) translateZ(calc(var(--s) / 2))}
+.cube3d span:nth-child(5){transform:rotateY(-90deg) translateZ(calc(var(--s) / 2))}
+.cube3d span:nth-child(6){transform:rotateX(-90deg) translateZ(calc(var(--s) / 2))}
+.hs-cube { animation: cubeSpin 24s infinite linear; }
+@keyframes cubeSpin {
+  from{transform:rotateX(24deg) rotateY(0) rotateZ(8deg)}
+  to{transform:rotateX(24deg) rotateY(360deg) rotateZ(8deg)}
+}
+
+.hs-ring {
+  --rx: 72deg; --ry: 0deg; --t: 18s;
+  border-radius: 50%; border: 1px solid rgba(168,135,78,.38);
+  translate: -50% -50%;
+  transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(0);
+  animation: ringSpin var(--t) linear infinite;
+}
+.hs-ring::after {
+  content: ""; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; margin-left: -5px;
+  border-radius: 50%; background: radial-gradient(circle at 30% 30%,#fff,var(--gold));
+  box-shadow: 0 0 16px rgba(196,165,102,.95);
+}
+.hs-ring.r1 { width: 270px; height: 270px; --rx: 72deg; --ry: 0deg; --t: 16s; }
+.hs-ring.r2 { width: 350px; height: 350px; --rx: 64deg; --ry: 38deg; --t: 24s; animation-direction: reverse; }
+.hs-ring.r3 { width: 430px; height: 430px; --rx: 78deg; --ry: -30deg; --t: 32s; border-style: dashed; opacity: .7; }
+@keyframes ringSpin { to{transform:rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(360deg)} }
+
+.hs-shard {
+  --x: 0px; --y: 0px; --z: 0px; --d: 9s;
+  width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 6px;
+  border: 1px solid rgba(168,135,78,.5);
+  background: linear-gradient(135deg,rgba(255,255,255,.8),rgba(196,165,102,.35));
+  box-shadow: 0 10px 20px -6px rgba(168,135,78,.45);
+  transform: translate3d(var(--x),var(--y),var(--z));
+  animation: shard var(--d) ease-in-out infinite;
+}
+.hs-shard.s1 { --x: -170px; --y: -90px; --z: 70px; --d: 8s; }
+.hs-shard.s2 { --x: 160px; --y: 110px; --z: -30px; --d: 11s; width: 22px; height: 22px; margin: -11px 0 0 -11px; }
+.hs-shard.s3 { --x: 40px; --y: -170px; --z: -80px; --d: 13s; width: 18px; height: 18px; margin: -9px 0 0 -9px; }
+@keyframes shard {
+  0%,100%{transform:translate3d(var(--x),var(--y),var(--z)) rotateX(0) rotateY(0)}
+  50%{transform:translate3d(var(--x),calc(var(--y) - 26px),calc(var(--z) + 40px)) rotateX(180deg) rotateY(180deg)}
+}
+
+.hs-shadow {
+  width: 220px; height: 40px; margin: 170px 0 0 -110px; border-radius: 50%;
+  background: radial-gradient(ellipse,rgba(20,18,14,.22),transparent 70%);
+  filter: blur(8px); transform: rotateX(90deg); animation: shadowPulse 7s ease-in-out infinite;
+}
+@keyframes shadowPulse {0%,100%{scale:1;opacity:.9}50%{scale:.78;opacity:.55}}
+@media (max-width: 1100px) { .pf-stage { display: none; } }
 
 .pf-hero .grid {
   display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(40px, 8vw, 120px);
@@ -327,7 +428,7 @@ $first_name = explode(' ', $member_name)[0];
   margin: 0;
 }
 
-/* ===== HOBBIES (Frank's Style) ===== */
+/* ===== HOBBIES ===== */
 .pf-stats {
   padding: 0 0 var(--section-y);
 }
@@ -348,7 +449,11 @@ $first_name = explode(' ', $member_name)[0];
 
 /* Glass Hobby Item */
 .hobby-item {
-  position: relative; display: flex; flex-direction: column;
+  text-decoration: none; 
+  color: inherit;        
+  cursor: pointer;
+  position: relative; 
+  display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 16px;
   padding: 32px 20px; text-align: center;
   background: linear-gradient(180deg, rgba(255,255,255,.9), rgba(247,244,236,.65));
@@ -356,6 +461,8 @@ $first_name = explode(' ', $member_name)[0];
   border-radius: 20px; overflow: hidden;
   box-shadow: var(--shadow-1);
   transition: transform .4s var(--ease-out), box-shadow .4s var(--ease), border-color .4s;
+  transform-style: preserve-3d; 
+  will-change: transform;
 }
 .hobby-item::before {
   content: ""; position: absolute; inset: 0;
@@ -444,11 +551,18 @@ $first_name = explode(' ', $member_name)[0];
 }
 .pf-cta .socials a:hover svg { transform: scale(1.1); }
 
-/* Reveal Animation */
-.reveal { opacity: 0; transform: translateY(30px); transition: opacity 1s var(--ease-out), transform 1s var(--ease-out); }
-.reveal.in { opacity: 1; transform: translateY(0); }
+/* ===== REVEAL — 3D rise ===== */
+.portfolio-js .reveal { opacity: 0; transform-origin: 50% 100%; }
+.portfolio-js .reveal.in {
+  opacity: 1;
+  animation: revealIn 1.15s var(--ease-out) var(--d,0ms) backwards;
+}
+@keyframes revealIn {
+  from { opacity: 0; translate: 0 46px; rotate: 1 0 0 14deg; scale: .96; }
+  to { opacity: 1; translate: 0 0; rotate: 1 0 0 0deg; scale: 1; }
+}
 
-/* Responsive */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .pf-hero .grid { grid-template-columns: 1fr; gap: 48px; text-align: center; }
   .pf-hero .kicker { margin: 0 auto 32px; }
@@ -460,7 +574,7 @@ $first_name = explode(' ', $member_name)[0];
   .skill-cards { grid-template-columns: 1fr; }
   .hobbies-grid { grid-template-columns: repeat(2, 1fr); }
   .pf-skills .section-head { flex-direction: column; align-items: center; gap: 12px; text-align: center; }
-  .floating-bg, .pf-cube { display: none; }
+  .pf-orb, .pf-stage { display: none; }
 }
 @media (max-width: 520px) {
   .hobbies-grid { grid-template-columns: 1fr; }
@@ -469,7 +583,8 @@ $first_name = explode(' ', $member_name)[0];
   .portfolio-page *, .portfolio-page *::before, .portfolio-page *::after {
     animation: none !important; transition: none !important;
   }
-  .reveal { opacity: 1; transform: none; }
+  .portfolio-js .reveal { opacity: 1; }
+  .pf-stage, .pf-orb, .read-progress, .cursor-glow { display: none; }
 }
 </style>
 
@@ -480,16 +595,27 @@ $first_name = explode(' ', $member_name)[0];
 <div class="cursor-glow" id="cursorGlow"></div>
 
 <main class="portfolio-page">
-  <!-- Floating Background Elements -->
-  <span class="floating-bg fb-1">✎</span>
-  <span class="floating-bg fb-2">📖</span>
-  <span class="floating-bg fb-3">✍</span>
-
   <!-- HERO SECTION -->
   <section class="pf-hero">
-    <div class="pf-cube" aria-hidden="true">
-      <span></span><span></span><span></span><span></span><span></span><span></span>
+    <div class="pf-orb o1"></div>
+    <div class="pf-orb o2"></div>
+    <div class="pf-orb o3"></div>
+
+    <!-- 3D Scene (Exact Match) -->
+    <div class="pf-stage" aria-hidden="true">
+      <div class="pf-scene">
+        <div class="hs-shadow"></div>
+        <div class="hs-ring r3"></div>
+        <div class="hs-ring r2"></div>
+        <div class="hs-ring r1"></div>
+        <div class="cube3d hs-cube"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="hs-core"></div>
+        <div class="hs-shard s1"></div>
+        <div class="hs-shard s2"></div>
+        <div class="hs-shard s3"></div>
+      </div>
     </div>
+
     <div class="container">
       <div class="grid">
         <div class="text">
@@ -504,7 +630,7 @@ $first_name = explode(' ', $member_name)[0];
             <a href="<?php echo esc_url(home_url('/our-members/')); ?>" class="pf-btn-ghost">Back to Members</a>
           </div>
         </div>
-        <div class="visual">
+        <div class="visual reveal" data-tilt="6">
           <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/kimmy.jpg'); ?>" alt="<?php echo esc_attr($member_name); ?>">
         </div>
       </div>
@@ -512,7 +638,7 @@ $first_name = explode(' ', $member_name)[0];
   </section>
 
   <!-- MINDSET SECTION -->
-  <section class="pf-mindset">
+  <section class="pf-mindset" data-scroll3d>
     <div class="container">
       <blockquote>
         “ Great technical writing turns complexity into clarity, and knowledge into something <em>everyone can understand.</em> ” <br><em>— Kim</em>
@@ -524,11 +650,11 @@ $first_name = explode(' ', $member_name)[0];
   <section class="pf-about">
     <div class="container">
       <div class="grid">
-        <div>
+        <div class="reveal">
           <p class="kicker">About Me</p>
           <h2>A mind for <em>writing.</em></h2>
         </div>
-        <div class="bio-content">
+        <div class="bio-content reveal" data-scroll3d>
           <p>
             As a Technical Writer, I don't just focus on writing words. I focus on transforming complex information into clear, organized, and meaningful documentation. 
             I believe that effective communication, accuracy, and attention to detail are essential in making technical information easier to understand and use.
@@ -546,22 +672,22 @@ $first_name = explode(' ', $member_name)[0];
   <!-- SKILLS SECTION -->
   <section class="pf-skills">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head reveal">
         <h2>What I <em>do.</em></h2>
         <p class="subtitle">Core Competencies</p>
       </div>
       <div class="skill-cards">
-        <div class="skill-card reveal">
+        <div class="skill-card reveal" data-tilt="5">
           <span class="num">01</span>
           <h3>Technical Documentation</h3>
           <p>Writing clear, structured user manuals, API references, and system guides. Making complex information easy to digest.</p>
         </div>
-        <div class="skill-card reveal">
+        <div class="skill-card reveal" data-tilt="5">
           <span class="num">02</span>
           <h3>Content Organization</h3>
           <p>Structuring information logically. Creating outlines, hierarchies, and navigation flows that help readers find what they need.</p>
         </div>
-        <div class="skill-card reveal">
+        <div class="skill-card reveal" data-tilt="5">
           <span class="num">03</span>
           <h3>Attention to Detail</h3>
           <p>Ensuring every word, diagram, and instruction is accurate. Proofreading and editing for clarity, consistency, and tone.</p>
@@ -570,82 +696,78 @@ $first_name = explode(' ', $member_name)[0];
     </div>
   </section>
 
-  <!-- HOBBIES SECTION (Frank's Style) -->
+  <!-- HOBBIES SECTION -->
   <section class="pf-stats">
     <div class="container">
-      <div class="section-head" style="margin-bottom: 48px; justify-content: center; text-align: center; border: none;">
+      <div class="section-head reveal" style="margin-bottom: 48px; justify-content: center; text-align: center; border: none;">
         <h2>Beyond the <em>screen.</em></h2>
       </div>
       
       <div class="hobbies-grid">
         
         <!-- WATCHING DRAMA -->
-        <div class="hobby-item reveal">
+        <a href="<?php echo esc_url(home_url('/watching-drama/')); ?>" class="hobby-item reveal" data-tilt="4">
           <div class="hobby-icon">
             <svg viewBox="0 0 24 24"><path d="M21,3H3C1.89,3 1,3.89 1,5V17A2,2 0 0,0 3,19H8V21H16V19H21A2,2 0 0,0 23,17V5C23,3.89 22.1,3 21,3M21,17H3V5H21M16,11L9,15V7"/></svg>
           </div>
           <span>Watching Drama</span>
-        </div>
+        </a>
 
         <!-- SINGING -->
-        <div class="hobby-item reveal">
+        <a href="<?php echo esc_url(home_url('/singing/')); ?>" class="hobby-item reveal" data-tilt="4">
           <div class="hobby-icon">
             <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,12.5 19.92,12.96 19.76,13.39C19.21,12.11 17.89,11.25 16.5,11.25C15.93,11.25 15.41,11.42 15,11.71C14.59,11.42 14.07,11.25 13.5,11.25C12.11,11.25 10.79,12.11 10.24,13.39C10.08,12.96 10,12.5 10,12A2,2 0 0,1 12,10C13.11,10 14,10.89 14,12C14,13.11 13.11,14 12,14A2,2 0 0,1 10,12C10,13.66 11.34,15 13,15C14.12,15 15.16,14.32 15.75,13.38C16.34,14.32 17.38,15 18.5,15C19.66,15 20.73,14.28 21.31,13.3C19.75,18.18 15.16,22 9,22A8,8 0 0,1 4,12A8,8 0 0,1 12,4Z"/></svg>
           </div>
           <span>Singing</span>
-        </div>
+        </a>
 
         <!-- DANCING -->
-        <div class="hobby-item reveal">
+        <a href="<?php echo esc_url(home_url('/dancing/')); ?>" class="hobby-item reveal" data-tilt="4">
           <div class="hobby-icon">
             <svg viewBox="0 0 24 24"><path d="M12,2A3,3 0 0,1 15,5A3,3 0 0,1 12,8A3,3 0 0,1 9,5A3,3 0 0,1 12,2M9,9H15A2,2 0 0,1 17,11V14L15,14V22H13V18H11V22H9V14L7,14V11A2,2 0 0,1 9,9M5,14A2,2 0 0,1 7,16V17H5V14M19,14A2,2 0 0,0 17,16V17H19V14Z"/></svg>
           </div>
           <span>Dancing</span>
-        </div>
+        </a>
 
         <!-- ONLINE GAMES -->
-        <div class="hobby-item reveal">
+        <a href="<?php echo esc_url(home_url('/online-games-kim/')); ?>" class="hobby-item reveal" data-tilt="4">
           <div class="hobby-icon">
             <svg viewBox="0 0 24 24"><path d="M7.97,16L5,19C4.67,19.3 4.23,19.5 3.75,19.5A1.75,1.75 0 0,1 2,17.75V17.5L3,10.12C3.21,7.81 5.14,6 7.5,6H16.5C18.86,6 20.79,7.81 21,10.12L22,17.5V17.75A1.75,1.75 0 0,1 20.25,19.5C19.77,19.5 19.33,19.3 19,19L16.03,16H7.97M7,9V11H5V12H7V14H8V12H10V11H8V9H7M16.5,9A1,1 0 0,0 15.5,10A1,1 0 0,0 16.5,11A1,1 0 0,0 17.5,10A1,1 0 0,0 16.5,9M14.5,12A1,1 0 0,0 13.5,13A1,1 0 0,0 14.5,14A1,1 0 0,0 15.5,13A1,1 0 0,0 14.5,12Z"/></svg>
           </div>
           <span>Online Games</span>
-        </div>
+        </a>
 
         <!-- READING BOOKS -->
-        <div class="hobby-item reveal">
+        <a href="<?php echo esc_url(home_url('/reading-books/')); ?>" class="hobby-item reveal" data-tilt="4">
           <div class="hobby-icon">
             <svg viewBox="0 0 24 24"><path d="M21,5C19.89,4.65 18.67,4.5 17.5,4.5C15.55,4.5 13.45,4.9 12,6C10.55,4.9 8.45,4.5 6.5,4.5C4.55,4.5 2.45,4.9 1,6V20.65C1,20.9 1.25,21.15 1.5,21.15C1.6,21.15 1.65,21.1 1.75,21.1C3.1,20.45 5.05,20 6.5,20C8.45,20 10.55,20.4 12,21.5C13.45,20.4 15.55,20 17.5,20C19.15,20 20.8,20.3 22.25,21.05C22.35,21.1 22.4,21.1 22.5,21.1C22.75,21.1 23,20.85 23,20.6V6C22.4,5.55 21.75,5.25 21,5M21,18.5C19.9,18.15 18.7,18 17.5,18C15.8,18 14.1,18.35 12.5,19V8C14.1,7.35 15.8,7 17.5,7C18.7,7 19.9,7.15 21,7.5V18.5Z"/></svg>
           </div>
           <span>Reading Books</span>
-        </div>
+        </a>
 
       </div>
     </div>
   </section>
 
   <!-- CONTACT CTA -->
-  <section class="pf-cta" id="contact">
+  <section class="pf-cta" id="contact" data-scroll3d>
     <div class="container">
-      <h2>Let's build <em>together.</em></h2>
-      <p>For more info kindly message me on any of the platforms below.</p>
+      <h2 class="reveal">Let's build <em>together.</em></h2>
+      <p class="reveal">For more info kindly message me on any of the platforms below.</p>
       
-      <div class="socials">
-        <!-- Facebook -->
+      <div class="socials reveal">
         <a href="#" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           Facebook
         </a>
-        <!-- Gmail -->
         <a href="mailto:kim@ourspace.dev" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
           Gmail
         </a>
-        <!-- Instagram -->
         <a href="#" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
           Instagram
         </a>
-        <!-- Telegram -->
         <a href="#" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
           Telegram
@@ -657,53 +779,136 @@ $first_name = explode(' ', $member_name)[0];
 </main>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  root.classList.add('portfolio-js');
 
-  // 1. Reveal Animation
-  const reveals = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window && !reduceMotion) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            entry.target.classList.add('in');
-          }, i * 100);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
-    reveals.forEach(reveal => observer.observe(reveal));
-  } else {
-    reveals.forEach(reveal => reveal.classList.add('in'));
-  }
+  var reduce  = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine    = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var desktop = matchMedia('(min-width: 769px)').matches;
+  var rich    = fine && desktop && !reduce;
+  if (rich) root.classList.add('portfolio-tilt');
 
-  // 2. Reading Progress Bar
-  const progressBar = document.getElementById('readProgress');
-  if (progressBar) {
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-          const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-          progressBar.style.width = (scrollTop / scrollHeight * 100) + '%';
-          ticking = false;
+  var $  = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var lerp  = function (a, b, t) { return a + (b - a) * t; };
+  var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
+
+  /* 1. Reveal — 3D rise via --d */
+  var io = new IntersectionObserver(function (entries) {
+    var shown = entries.filter(function (e) { return e.isIntersecting; });
+    shown.forEach(function (entry, i) {
+      entry.target.style.setProperty('--d', (reduce ? 0 : i * 90) + 'ms');
+      entry.target.classList.add('in');
+      io.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+  $$('.reveal').forEach(function (el) { io.observe(el); });
+
+  /* 2. Scroll: progress, hero parallax, scroll-linked 3D */
+  var bar   = $('#readProgress');
+  var hero  = $('.pf-hero');
+  var s3d   = $$('[data-scroll3d]');
+  var ticking = false;
+
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var y = window.scrollY || root.scrollTop;
+      var max = root.scrollHeight - innerHeight;
+      if (bar) bar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+
+      if (!reduce) {
+        if (hero && y < innerHeight * 1.3) hero.style.setProperty('--sy', y.toFixed(1));
+        var vh = innerHeight;
+        s3d.forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.bottom < -200 || r.top > vh + 200) return;
+          var p = clamp((r.top + r.height / 2 - vh / 2) / vh, -1, 1);
+          el.style.setProperty('--p', p.toFixed(3));
         });
-        ticking = true;
       }
-    }, { passive: true });
+      ticking = false;
+    });
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+
+  /* 3. Cursor glow + hero parallax */
+  if (rich) {
+    var glow = $('#cursorGlow');
+    var gx = innerWidth / 2, gy = innerHeight / 2, mx = gx, my = gy;
+    var tx = 0, ty = 0, cx = 0, cy = 0;
+
+    document.addEventListener('pointermove', function (e) { mx = e.clientX; my = e.clientY; });
+    if (hero) {
+      hero.addEventListener('pointermove', function (e) {
+        var r = hero.getBoundingClientRect();
+        tx = (e.clientX - r.left) / r.width - 0.5;
+        ty = (e.clientY - r.top) / r.height - 0.5;
+      });
+      hero.addEventListener('pointerleave', function () { tx = 0; ty = 0; });
+    }
+
+    (function loop() {
+      if (glow) {
+        gx = lerp(gx, mx, 0.08); gy = lerp(gy, my, 0.08);
+        glow.style.transform = 'translate3d(' + (gx - 210).toFixed(1) + 'px,' + (gy - 210).toFixed(1) + 'px,0)';
+      }
+      if (hero) {
+        cx = lerp(cx, tx, 0.06); cy = lerp(cy, ty, 0.06);
+        if (Math.abs(cx - tx) > 0.0005 || Math.abs(cy - ty) > 0.0005) {
+          hero.style.setProperty('--px', cx.toFixed(4));
+          hero.style.setProperty('--py', cy.toFixed(4));
+        }
+      }
+      requestAnimationFrame(loop);
+    })();
   }
 
-  // 3. Cursor Glow
-  const cursorGlow = document.getElementById('cursorGlow');
-  if (cursorGlow && window.innerWidth > 768 && !reduceMotion) {
-    document.addEventListener('mousemove', (e) => {
-      cursorGlow.style.left = e.clientX + 'px';
-      cursorGlow.style.top = e.clientY + 'px';
-    }, { passive: true });
+  /* 4. 3D tilt + glare */
+  if (rich) {
+    $$('[data-tilt]').forEach(function (el) {
+      var max = parseFloat(el.getAttribute('data-tilt')) || 5;
+      var lift = 4;
+      var rx = 0, ry = 0, l = 0, trx = 0, tryy = 0, tl = 0, raf = 0;
+
+      function frame() {
+        rx = lerp(rx, trx, 0.14); ry = lerp(ry, tryy, 0.14); l = lerp(l, tl, 0.14);
+        el.style.transform =
+          'perspective(1000px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) +
+          'deg) translateY(' + (-l).toFixed(2) + 'px)';
+        var moving = Math.abs(rx - trx) + Math.abs(ry - tryy) + Math.abs(l - tl) > 0.01;
+        if (moving) { raf = requestAnimationFrame(frame); }
+        else { raf = 0; if (tl === 0) el.style.transform = ''; }
+      }
+      function kick() { if (!raf) raf = requestAnimationFrame(frame); }
+
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width;
+        var py = (e.clientY - r.top) / r.height;
+        tryy = (px - 0.5) * max * 2;
+        trx  = -(py - 0.5) * max * 2;
+        tl = lift;
+        el.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+        el.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+        el.style.setProperty('--nx', (px - 0.5).toFixed(3));
+        el.style.setProperty('--ny', (py - 0.5).toFixed(3));
+        kick();
+      });
+      el.addEventListener('pointerleave', function () {
+        trx = 0; tryy = 0; tl = 0;
+        el.style.setProperty('--nx', 0);
+        el.style.setProperty('--ny', 0);
+        kick();
+      });
+    });
   }
-});
+})();
 </script>
 
 <?php get_footer(); ?>
