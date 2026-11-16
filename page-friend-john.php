@@ -548,42 +548,42 @@ $first_name = explode(' ', $member_name)[0];
       
       <div class="stats-grid">
         <!-- CHESS -->
-        <a href="<?php echo esc_url(home_url('/hobbies/ivan-chess/')); ?>" class="stat-box reveal">
+        <a href="<?php echo esc_url(home_url('/hobby-john/?type=chess')); ?>" class="stat-box reveal">
           <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19,22H5V20H19V22M17,10C17,7.24 14.76,5 12,5C9.24,5 7,7.24 7,10C7,12.03 8.21,13.77 10,14.58V17H14V14.58C15.79,13.77 17,12.03 17,10M12,3C15.87,3 19,6.13 19,10C19,12.41 17.71,14.53 15.78,15.71L16,17H8L8.22,15.71C6.29,14.53 5,12.41 5,10C5,6.13 8.13,3 12,3Z"/></svg>
           <span class="label">Strategy</span>
           <div class="value">Chess</div>
         </a>
 
         <!-- BASKETBALL -->
-        <a href="<?php echo esc_url(home_url('/hobbies/ivan-basketball/')); ?>" class="stat-box reveal">
+        <a href="<?php echo esc_url(home_url('/hobby-john/?type=basketball')); ?>" class="stat-box reveal">
           <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10Z"/></svg>
           <span class="label">Court</span>
           <div class="value">Basketball</div>
         </a>
 
         <!-- LISTENING MUSIC -->
-        <a href="#" class="stat-box reveal">
+       <a href="<?php echo esc_url(home_url('/hobby-john/?type=listening-music')); ?>" class="stat-box reveal">
           <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12,3V13.55C11.41,13.21 10.73,13 10,13A3,3 0 0,0 7,16A3,3 0 0,0 10,19A3,3 0 0,0 13,16V7H17V5H12V3Z"/></svg>
           <span class="label">Vibes</span>
           <div class="value">Listening Music</div>
         </a>
 
         <!-- SINGING -->
-        <a href="#" class="stat-box reveal">
+<a href="<?php echo esc_url(home_url('/hobby-john/?type=singing')); ?>" class="stat-box reveal">
           <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12C20,12.5 19.92,12.96 19.76,13.39C19.21,12.11 17.89,11.25 16.5,11.25C15.93,11.25 15.41,11.42 15,11.71C14.59,11.42 14.07,11.25 13.5,11.25C12.11,11.25 10.79,12.11 10.24,13.39C10.08,12.96 10,12.5 10,12A2,2 0 0,1 12,10C13.11,10 14,10.89 14,12C14,13.11 13.11,14 12,14A2,2 0 0,1 10,12C10,13.66 11.34,15 13,15C14.12,15 15.16,14.32 15.75,13.38C16.34,14.32 17.38,15 18.5,15C19.66,15 20.73,14.28 21.31,13.3C19.75,18.18 15.16,22 9,22A8,8 0 0,1 4,12A8,8 0 0,1 12,4Z"/></svg>
           <span class="label">Voice</span>
           <div class="value">Singing</div>
         </a>
 
         <!-- BLOGGER -->
-        <a href="#" class="stat-box reveal">
+       <a href="<?php echo esc_url(home_url('/hobby-john/?type=blogger')); ?>" class="stat-box reveal">
           <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19M17,17H7V15H17V17M17,13H7V11H17V13M17,9H7V7H17V9Z"/></svg>
           <span class="label">Written</span>
           <div class="value">Blogger</div>
         </a>
 
         <!-- TIKTOKER -->
-        <a href="#" class="stat-box reveal">
+        <a href="<?php echo esc_url(home_url('/hobby-john/?type=tiktoker')); ?>" class="stat-box reveal">
           <svg class="stat-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.592 2.592 0 0 1-2.59 2.5c-1.42 0-2.6-1.16-2.6-2.6 0-1.72 1.66-3.01 3.37-2.48V9.66c-3.45-.46-6.47 2.22-6.47 5.64 0 3.33 2.76 5.7 5.69 5.7 3.14 0 5.69-2.55 5.69-5.7V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3s-1.88.09-3.24-1.48z"/></svg>
           <span class="label">Content</span>
           <div class="value">Tiktoker</div>
